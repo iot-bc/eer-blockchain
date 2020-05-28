@@ -1,0 +1,26 @@
+{
+  "name": "eer-blockchain",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "start": "fabric-chaincode-node start"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/iot-bc/eer-blockchain.git"
+  },
+  "author": "oGsLP",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/iot-bc/eer-blockchain/issues"
+  },
+  "homepage": "https://github.com/iot-bc/eer-blockchain#readme",
+  "dependencies": {
+    "fabric-contract-api": "^2.1.2",
+    "fabric-shim": "^2.1.2"
+  }
+}
