@@ -47,6 +47,8 @@ class AccessControlContract extends Contract {
     ac.activiate();
 
     await ctx.acList.addAccessControl(ac);
+
+    return ac;
   }
 
   // async updatePolicy(ctx) {
