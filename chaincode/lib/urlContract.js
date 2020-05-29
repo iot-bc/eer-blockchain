@@ -33,48 +33,16 @@ class UniformResourceLocatorContract extends Contract {
   }
 
   async initLedger(ctx){
-    console.log("++++ init url ledger ++++ ")
-    const urls = [
-      {
-        owner: "1",
-        device: "1-1",
-        url:"123"
-      },
-      {
-        owner: "2",
-        device: "2-1",
-        url:"1eee23"
-      },
-      {
-        owner: "3",
-        device: "3-1",
-        url:"122223"
-      },
-    ];
-    for(let i=0;i<urls.length;i++){
-      await ctx.stub.putState("URL"+i, Buffer.from(JSON.stringify(urls[i])))
-      console.info('Added <--> ', urls[i]);
-    }
+    await this.addUrl("testSub","testDevice","testUrl")
     console.info('============= END : Initialize Ledger ===========');
   }
 
-  async queryUrls(ctx) {
-    const startKey = 'URL0';
-    const endKey = 'URL999';
-    const allResults = [];
-    for await (const {key, value} of ctx.stub.getStateByRange(startKey, endKey)) {
-      const strValue = Buffer.from(value).toString('utf8');
-      let record;
-      try {
-        record = JSON.parse(strValue);
-      } catch (err) {
-        console.log(err);
-        record = strValue;
-      }
-      allResults.push({ Key: key, Record: record });
-    }
-    console.info(allResults);
-    return JSON.stringify(allResults);
+  async queryAll(ctx) {
+    return ctx.urlList;
+  }
+  async getUrl(ctx,owner,device){
+    let urlKey = Url.makeKey([owner, device]);
+    return await ctx.urlList.getUrl(urlKey)
   }
 
   async addUrl(ctx, owner, device, url) {
