@@ -32,6 +32,51 @@ class UniformResourceLocatorContract extends Contract {
     console.log("Instantiate the AccessControl Contract");
   }
 
+  async initLedger(ctx){
+    console.log("++++ init url ledger ++++ ")
+    const urls = [
+      {
+        owner: "1",
+        device: "1-1",
+        url:"123"
+      },
+      {
+        owner: "2",
+        device: "2-1",
+        url:"1eee23"
+      },
+      {
+        owner: "3",
+        device: "3-1",
+        url:"122223"
+      },
+    ];
+    for(let i=0;i<urls.length;i++){
+      await ctx.stub.putState("URL"+i, Buffer.from(JSON.stringify(urls[i])))
+      console.info('Added <--> ', urls[i]);
+    }
+    console.info('============= END : Initialize Ledger ===========');
+  }
+
+  async queryUrls(ctx) {
+    const startKey = 'URL0';
+    const endKey = 'URL999';
+    const allResults = [];
+    for await (const {key, value} of ctx.stub.getStateByRange(startKey, endKey)) {
+      const strValue = Buffer.from(value).toString('utf8');
+      let record;
+      try {
+        record = JSON.parse(strValue);
+      } catch (err) {
+        console.log(err);
+        record = strValue;
+      }
+      allResults.push({ Key: key, Record: record });
+    }
+    console.info(allResults);
+    return JSON.stringify(allResults);
+  }
+
   async addUrl(ctx, owner, device, url) {
     let _url = Url.createInstance(owner, device, url);
 
