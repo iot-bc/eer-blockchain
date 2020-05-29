@@ -70,7 +70,7 @@ typings/
 .yarn-integrity
 
 # dotenv environment variables file
-.env
+eer-network/.env
 .env.test
 
 # parcel-bundler cache (https://parceljs.org/)
@@ -103,3 +103,11 @@ dist
 
 # TernJS port file
 .tern-port
+
+
+eer-network/system-genesis-block
+eer-network/channel-artifacts
+eer-network/*.tar.gz
+eer-network/log.txt
+eer-network/organizations/ordererOrganizations
+eer-network/organizations/peerOrganizations
