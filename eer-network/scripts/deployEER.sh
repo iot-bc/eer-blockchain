@@ -173,7 +173,7 @@ chaincodeInvokeInit() {
   # peer (if join was successful), let's supply it directly as we know
   # it using the "-o" option
   set -x
-  peer chaincode invoke -o localhost:7050 --ordererTLSHostnameOverride orderer.example.com --tls $CORE_PEER_TLS_ENABLED --cafile $ORDERER_CA -C $CHANNEL_NAME -n eer $PEER_CONN_PARMS --isInit -c '{"function":"org.eer.ac:initLedger","Args":[]}' >&log.txt
+  peer chaincode invoke -o localhost:7050 --ordererTLSHostnameOverride orderer.example.com --tls $CORE_PEER_TLS_ENABLED --cafile $ORDERER_CA -C $CHANNEL_NAME -n eer $PEER_CONN_PARMS --isInit -c '{"function":"org.eer.url:initLedger","Args":[]}' >&log.txt
   res=$?
   set +x
   cat log.txt
@@ -286,6 +286,6 @@ sleep 2
 
 # Query chaincode on peer0.org1
 echo "Querying chaincode on peer0.org1..."
-chaincodeQuery 1
+# chaincodeQuery 1
 
 exit 0

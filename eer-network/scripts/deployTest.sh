@@ -224,7 +224,7 @@ f1() {
     sleep $DELAY
     echo "Attempting to f1 peer0.org${ORG}, Retry after $DELAY seconds."
     set -x
-    peer chaincode query -C $CHANNEL_NAME -n eer -c '{"Args":["org.eer.url:addUrl","o1","d1","u1"]}' >&log.txt
+    peer chaincode query -C $CHANNEL_NAME -n eer -c '{"Args":["org.eer.url:addUrl","o2","d2","u11"]}' >&log.txt
     res=$?
     set +x
 		let rc=$res
