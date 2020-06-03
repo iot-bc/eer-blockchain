@@ -35,8 +35,13 @@ class StateList {
     }
   }
 
-  async getValidState(key) {
-    return null;
+  async getStateList() {
+
+  }
+
+  async deleteState(key) {
+    let ledgerKey = this.ctx.stub.createCompositeKey(this.name, State.splitKey(key));
+    await this.ctx.stub.deleteState(ledgerKey);
   }
 
   async updateState(state) {
