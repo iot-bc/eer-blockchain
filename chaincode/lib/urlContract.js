@@ -50,7 +50,7 @@ class UniformResourceLocatorContract extends Contract {
   async addUrl(ctx, owner, device, url) {
     let _url = Url.createInstance(owner, device, url);
 
-    _url.activiate();
+    // _url.activiate();
 
     await ctx.urlList.addUrl(_url);
 
