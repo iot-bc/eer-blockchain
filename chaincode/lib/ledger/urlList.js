@@ -24,7 +24,11 @@ class UniformResourceLocatorList extends StateList {
   }
 
   async updateUrl(url) {
-    return this.updateUrl(url);
+    return this.updateState(url);
+  }
+
+  async deleteUrl(urlKey) {
+    return this.deleteState(urlKey);
   }
 
   // async removeUrl(url){

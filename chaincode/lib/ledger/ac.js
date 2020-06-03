@@ -94,7 +94,7 @@ class AccessControl extends State {
   }
 
   static createInstance(subject, object, operation, role) {
-    return new AccessControl({ subject, object, operation, role });
+    return new AccessControl({subject, object, operation, role});
   }
 
   static getClass() {

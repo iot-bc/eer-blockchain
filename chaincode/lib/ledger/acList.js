@@ -11,7 +11,7 @@ const AccessControl = require("./ac");
 
 class AccessControlList extends StateList {
   constructor(ctx) {
-    super(ctx, "org.eer.acList");
+    super(ctx, "org.eer.aclist");
     this.use(AccessControl);
   }
 
@@ -25,6 +25,10 @@ class AccessControlList extends StateList {
 
   async updateAccessControl(ac) {
     return this.updateState(ac);
+  }
+
+  async deleteAccessControl(acKey) {
+    return this.deleteState(acKey);
   }
 
   // async removeAccessControl(ac){

@@ -58,7 +58,7 @@ class UniformResourceLocator extends State {
   }
 
   static createInstance(owner, device, url) {
-    return new UniformResourceLocator({ owner, device, url });
+    return new UniformResourceLocator({owner, device, url});
   }
 
   static getClass() {
