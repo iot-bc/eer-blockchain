@@ -1,0 +1,16 @@
+{
+  "name": "tests",
+  "version": "1.0.0",
+  "description": "",
+  "main": "addUrl.js",
+  "scripts": {
+    "test": "rm -rf _idwallet && node addWallet.js && node addUrl.js"
+  },
+  "dependencies": {
+    "fabric-network": "^2.1.0",
+    "fabric-ca-client": "^2.1.0",
+    "js-yaml": "^3.14.0"
+  },
+  "author": "",
+  "license": "ISC"
+}
