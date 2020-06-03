@@ -41,3 +41,5 @@ class KeyContract extends Contract{
 
   // fnssss todo
 }
+
+module.exports= KeyContract;
