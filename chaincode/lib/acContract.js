@@ -5,7 +5,7 @@
  * @Function: do nothing >_>
  */
 
-const { Contract, Context } = require("fabric-contract-api");
+const {Contract, Context} = require("fabric-contract-api");
 
 const AccessControl = require("./ledger/ac");
 const AccessControlList = require("./ledger/acList");
@@ -31,10 +31,10 @@ class AccessControlContract extends Contract {
     console.log("Instantiate the AccessControl Contract");
   }
 
-  async initLedger(ctx){
-    await this.addPolicy("testSbj","testSbj","Read","Owner")
-    await this.addPolicy("testSbj","testObj","Read","Teacher")
-    console.info('============= END : Initialize Ledger ===========');
+  async initLedger(ctx) {
+    console.info("============= START : Initialize Ledger ===========");
+    // initLedger
+    console.info("=============  END : Initialize Ledger  ===========");
   }
 
   async queryAll(ctx) {

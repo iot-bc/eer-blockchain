@@ -5,7 +5,7 @@
  * @Function: do nothing >_>
  */
 
-const { Contract, Context } = require("fabric-contract-api");
+const {Contract, Context} = require("fabric-contract-api");
 
 const Url = require("./ledger/url");
 const UrlList = require("./ledger/urlList");
@@ -29,20 +29,22 @@ class UniformResourceLocatorContract extends Contract {
 
   async instantiate(ctx) {
     // init
-    console.log("Instantiate the AccessControl Contract");
+    console.log("Instantiate the Url Contract");
   }
 
-  async initLedger(ctx){
-    await this.addUrl("testSub","testDevice","testUrl")
-    console.info('============= END : Initialize Ledger ===========');
+  async initLedger(ctx) {
+    console.info("============= START : Initialize Ledger ===========");
+    // initLedger
+    console.info("=============  END : Initialize Ledger  ===========");
   }
 
   async queryAll(ctx) {
     return ctx.urlList;
   }
-  async getUrl(ctx,owner,device){
+
+  async getUrl(ctx, owner, device) {
     let urlKey = Url.makeKey([owner, device]);
-    return await ctx.urlList.getUrl(urlKey)
+    return await ctx.urlList.getUrl(urlKey);
   }
 
   async addUrl(ctx, owner, device, url) {
