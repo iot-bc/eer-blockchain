@@ -56,11 +56,14 @@ async function main() {
     // buy commercial paper
     console.log("Submit addUrl transaction.");
 
+    await contract.submitTransaction('addUrl', "o1","d1","u1");
+
     // const addResponse = await contract.submitTransaction('addUrl', "o2","d2","u2");
+
+    await contract.submitTransaction('updateUrl', "o1","d1","u3");
 
     const addResponse = await contract.submitTransaction("getUrl", "o1", "d1");
 
-    // const addResponse = await contract.submitTransaction('updateUrl', "o1","d1","u3");
     // process response
 
     console.log("Process addUrl transaction response.");

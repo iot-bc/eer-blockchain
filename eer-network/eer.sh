@@ -1,22 +1,10 @@
 #!/bin/bash
-#
-# Copyright IBM Corp All Rights Reserved
-#
-# SPDX-License-Identifier: Apache-2.0
-#
 
-# This script brings up a Hyperledger Fabric network for testing smart contracts
-# and applications. The test network consists of two organizations with one
-# peer each, and a single node Raft ordering service. Users can also use this
-# script to create a channel deploy a chaincode on the channel
-#
-# prepending $PWD/../bin to PATH to ensure we are picking up the correct binaries
-# this may be commented out to resolve installed version of tools if desired
+# modified network.sh
+
 export FABRIC_CFG_PATH=${PWD}/configtx
 export VERBOSE=false
 
-# Obtain CONTAINER_IDS and remove them
-# TODO Might want to make this optional - could clear other containers
 # This function is called when you bring a network down
 function clearContainers() {
   CONTAINER_IDS=$(docker ps -a | awk '($2 ~ /dev-peer.*/) {print $1}')
@@ -87,21 +75,6 @@ function checkPrereqs() {
 }
 
 
-# Before you can bring up a network, each organization needs to generate the crypto
-# material that will define that organization on the network. Because Hyperledger
-# Fabric is a permissioned blockchain, each node and user on the network needs to
-# use certificates and keys to sign and verify its actions. In addition, each user
-# needs to belong to an organization that is recognized as a member of the network.
-# You can use the Cryptogen tool or Fabric CAs to generate the organization crypto
-# material.
-
-# By default, the sample network uses cryptogen. Cryptogen is a tool that is
-# meant for development and testing that can quicky create the certificates and keys
-# that can be consumed by a Fabric network. The cryptogen tool consumes a series
-# of configuration files for each organization in the "organizations/cryptogen"
-# directory. Cryptogen uses the files to generate the crypto  material for each
-# org in the "organizations" directory.
-
 # You can also Fabric CAs to generate the crypto material. CAs sign the certificates
 # and keys that they generate to create a valid root of trust for each organization.
 # The script uses Docker Compose to bring up three CAs, one for each peer organization
@@ -113,112 +86,35 @@ function checkPrereqs() {
 
 # Create Organziation crypto material using cryptogen or CAs
 function createOrgs() {
-
-  if [ -d "organizations/peerOrganizations" ]; then
-    rm -Rf organizations/peerOrganizations && rm -Rf organizations/ordererOrganizations
-  fi
-
-  # Create crypto material using cryptogen
-  if [ "$CRYPTO" == "cryptogen" ]; then
-    which cryptogen
-    if [ "$?" -ne 0 ]; then
-      echo "cryptogen tool not found. exiting"
-      exit 1
-    fi
-    echo
-    echo "##########################################################"
-    echo "##### Generate certificates using cryptogen tool #########"
-    echo "##########################################################"
-    echo
-
-    echo "##########################################################"
-    echo "############ Create Org1 Identities ######################"
-    echo "##########################################################"
-
-    set -x
-    cryptogen generate --config=./organizations/cryptogen/crypto-config-org1.yaml --output="organizations"
-    res=$?
-    set +x
-    if [ $res -ne 0 ]; then
-      echo "Failed to generate certificates..."
-      exit 1
-    fi
-
-    echo "##########################################################"
-    echo "############ Create Org2 Identities ######################"
-    echo "##########################################################"
-
-    set -x
-    cryptogen generate --config=./organizations/cryptogen/crypto-config-org2.yaml --output="organizations"
-    res=$?
-    set +x
-    if [ $res -ne 0 ]; then
-      echo "Failed to generate certificates..."
-      exit 1
-    fi
-
-    echo "##########################################################"
-    echo "############ Create Orderer Org Identities ###############"
-    echo "##########################################################"
-
-    set -x
-    cryptogen generate --config=./organizations/cryptogen/crypto-config-orderer.yaml --output="organizations"
-    res=$?
-    set +x
-    if [ $res -ne 0 ]; then
-      echo "Failed to generate certificates..."
-      exit 1
-    fi
-
-  fi
-
   # Create crypto material using Fabric CAs
-  if [ "$CRYPTO" == "Certificate Authorities" ]; then
+  echo
+  echo "##########################################################"
+  echo "##### Generate certificates using Fabric CA's ############"
+  echo "##########################################################"
 
-    fabric-ca-client version > /dev/null 2>&1
-    if [ $? -ne 0 ]; then
-      echo "Fabric CA client not found locally, downloading..."
-      cd ..
-      curl -s -L "https://github.com/hyperledger/fabric-ca/releases/download/v${CA_IMAGETAG}/hyperledger-fabric-ca-${OS_ARCH}-${CA_IMAGETAG}.tar.gz" | tar xz
-    if [ -n "$rc" ]; then
-        echo "==> There was an error downloading the binary file."
-        echo "fabric-ca-client binary is not available to download"
-    else
-        echo "==> Done."
-      cd test-network
-    fi
-    fi
+  IMAGE_TAG=${CA_IMAGETAG} docker-compose -f $COMPOSE_FILE_CA up -d 2>&1
 
-    echo
-    echo "##########################################################"
-    echo "##### Generate certificates using Fabric CA's ############"
-    echo "##########################################################"
+  . organizations/fabric-ca/registerEnroll.sh
 
-    IMAGE_TAG=${CA_IMAGETAG} docker-compose -f $COMPOSE_FILE_CA up -d 2>&1
+  sleep 10
 
-    . organizations/fabric-ca/registerEnroll.sh
+  echo "##########################################################"
+  echo "############ Create Org1 Identities ######################"
+  echo "##########################################################"
 
-    sleep 10
+  createOrg1
 
-    echo "##########################################################"
-    echo "############ Create Org1 Identities ######################"
-    echo "##########################################################"
+  echo "##########################################################"
+  echo "############ Create Org2 Identities ######################"
+  echo "##########################################################"
 
-    createOrg1
+  createOrg2
 
-    echo "##########################################################"
-    echo "############ Create Org2 Identities ######################"
-    echo "##########################################################"
+  echo "##########################################################"
+  echo "############ Create Orderer Org Identities ###############"
+  echo "##########################################################"
 
-    createOrg2
-
-    echo "##########################################################"
-    echo "############ Create Orderer Org Identities ###############"
-    echo "##########################################################"
-
-    createOrderer
-
-  fi
+  createOrderer
 
   echo
   echo "Generate CCP files for Org1 and Org2"
@@ -242,14 +138,6 @@ function createOrgs() {
 # recognized as network members. The file also specifies the anchor peers for each
 # peer org. In future steps, this same file is used to create the channel creation
 # transaction and the anchor peer updates.
-#
-#
-# If you receive the following warning, it can be safely ignored:
-#
-# [bccsp] GetDefault -> WARN 001 Before using BCCSP, please call InitFactories(). Falling back to bootBCCSP.
-#
-# You can ignore the logs regarding intermediate certs, we are not using them in
-# this crypto implementation.
 
 # Generate orderer system channel genesis block.
 function createConsortium() {
@@ -341,18 +229,6 @@ function deployEER() {
 }
 
 
-function deployTest() {
-
-  scripts/deployTest.sh $CHANNEL_NAME $CC_SRC_LANGUAGE $VERSION $CLI_DELAY $MAX_RETRY $VERBOSE
-
-  if [ $? -ne 0 ]; then
-    echo "ERROR !!! Testing chaincode failed"
-    exit 1
-  fi
-
-  exit 0
-}
-
 
 # Tear down running network
 function networkDown() {
@@ -367,16 +243,16 @@ function networkDown() {
     #Cleanup images
     removeUnwantedImages
     # remove orderer block and other channel configuration transactions and certs
-    rm -rf system-genesis-block/*.block organizations/peerOrganizations organizations/ordererOrganizations
+    sudo rm -rf system-genesis-block/*.block organizations/peerOrganizations organizations/ordererOrganizations
     ## remove fabric ca artifacts
-    rm -rf organizations/fabric-ca/org1/msp organizations/fabric-ca/org1/tls-cert.pem organizations/fabric-ca/org1/ca-cert.pem organizations/fabric-ca/org1/IssuerPublicKey organizations/fabric-ca/org1/IssuerRevocationPublicKey organizations/fabric-ca/org1/fabric-ca-server.db
-    rm -rf organizations/fabric-ca/org2/msp organizations/fabric-ca/org2/tls-cert.pem organizations/fabric-ca/org2/ca-cert.pem organizations/fabric-ca/org2/IssuerPublicKey organizations/fabric-ca/org2/IssuerRevocationPublicKey organizations/fabric-ca/org2/fabric-ca-server.db
-    rm -rf organizations/fabric-ca/ordererOrg/msp organizations/fabric-ca/ordererOrg/tls-cert.pem organizations/fabric-ca/ordererOrg/ca-cert.pem organizations/fabric-ca/ordererOrg/IssuerPublicKey organizations/fabric-ca/ordererOrg/IssuerRevocationPublicKey organizations/fabric-ca/ordererOrg/fabric-ca-server.db
-    rm -rf addOrg3/fabric-ca/org3/msp addOrg3/fabric-ca/org3/tls-cert.pem addOrg3/fabric-ca/org3/ca-cert.pem addOrg3/fabric-ca/org3/IssuerPublicKey addOrg3/fabric-ca/org3/IssuerRevocationPublicKey addOrg3/fabric-ca/org3/fabric-ca-server.db
+    sudo rm -rf organizations/fabric-ca/org1/msp organizations/fabric-ca/org1/tls-cert.pem organizations/fabric-ca/org1/ca-cert.pem organizations/fabric-ca/org1/IssuerPublicKey organizations/fabric-ca/org1/IssuerRevocationPublicKey organizations/fabric-ca/org1/fabric-ca-server.db
+    sudo rm -rf organizations/fabric-ca/org2/msp organizations/fabric-ca/org2/tls-cert.pem organizations/fabric-ca/org2/ca-cert.pem organizations/fabric-ca/org2/IssuerPublicKey organizations/fabric-ca/org2/IssuerRevocationPublicKey organizations/fabric-ca/org2/fabric-ca-server.db
+    sudo rm -rf organizations/fabric-ca/ordererOrg/msp organizations/fabric-ca/ordererOrg/tls-cert.pem organizations/fabric-ca/ordererOrg/ca-cert.pem organizations/fabric-ca/ordererOrg/IssuerPublicKey organizations/fabric-ca/ordererOrg/IssuerRevocationPublicKey organizations/fabric-ca/ordererOrg/fabric-ca-server.db
+    sudo rm -rf addOrg3/fabric-ca/org3/msp addOrg3/fabric-ca/org3/tls-cert.pem addOrg3/fabric-ca/org3/ca-cert.pem addOrg3/fabric-ca/org3/IssuerPublicKey addOrg3/fabric-ca/org3/IssuerRevocationPublicKey addOrg3/fabric-ca/org3/fabric-ca-server.db
 
 
     # remove channel and script artifacts
-    rm -rf channel-artifacts log.txt eer.tar.gz eer
+    sudo rm -rf channel-artifacts log.txt eer.tar.gz eer
 
   fi
 }
@@ -385,7 +261,7 @@ function networkDown() {
 # native binaries for your platform, e.g., darwin-amd64 or linux-amd64
 OS_ARCH=$(echo "$(uname -s | tr '[:upper:]' '[:lower:]' | sed 's/mingw64_nt.*/windows/')-$(uname -m | sed 's/x86_64/amd64/g')" | awk '{print tolower($0)}')
 # Using crpto vs CA. default is cryptogen
-CRYPTO="cryptogen"
+CRYPTO="Certificate Authorities"
 # timeout duration - the duration the CLI should wait for a response from
 # another container before giving up
 MAX_RETRY=5
@@ -399,13 +275,8 @@ COMPOSE_FILE_BASE=docker/docker-compose-test-net.yaml
 COMPOSE_FILE_COUCH=docker/docker-compose-couch.yaml
 # certificate authorities compose file
 COMPOSE_FILE_CA=docker/docker-compose-ca.yaml
-# use this as the docker compose couch file for org3
-COMPOSE_FILE_COUCH_ORG3=addOrg3/docker/docker-compose-couch-org3.yaml
-# use this as the default docker-compose yaml definition for org3
-COMPOSE_FILE_ORG3=addOrg3/docker/docker-compose-org3.yaml
-#
-# use golang as the default language for chaincode
-CC_SRC_LANGUAGE=golang
+# use js as the default language for chaincode
+CC_SRC_LANGUAGE=javascript
 # Chaincode version
 VERSION=1
 # default image tag
@@ -413,12 +284,13 @@ IMAGETAG="latest"
 # default ca image tag
 CA_IMAGETAG="1.4.6"
 # default database
-DATABASE="leveldb"
+DATABASE="couchdb"
 
 # Parse commandline args
 
 ## Parse mode
 if [[ $# -lt 1 ]] ; then
+  echo $#
   printHelp
   exit 0
 else
@@ -435,65 +307,6 @@ if [[ $# -ge 1 ]] ; then
   fi
 fi
 
-# parse flags
-
-while [[ $# -ge 1 ]] ; do
-  key="$1"
-  case $key in
-  -h )
-    printHelp
-    exit 0
-    ;;
-  -c )
-    CHANNEL_NAME="$2"
-    shift
-    ;;
-  -ca )
-    CRYPTO="Certificate Authorities"
-    ;;
-  -r )
-    MAX_RETRY="$2"
-    shift
-    ;;
-  -d )
-    CLI_DELAY="$2"
-    shift
-    ;;
-  -s )
-    DATABASE="$2"
-    shift
-    ;;
-  -l )
-    CC_SRC_LANGUAGE="$2"
-    shift
-    ;;
-  -v )
-    VERSION="$2"
-    shift
-    ;;
-  -i )
-    IMAGETAG="$2"
-    shift
-    ;;
-  -cai )
-    CA_IMAGETAG="$2"
-    shift
-    ;;
-  -verbose )
-    VERBOSE=true
-    shift
-    ;;
-  * )
-    echo
-    echo "Unknown flag: $key"
-    echo
-    printHelp
-    exit 1
-    ;;
-  esac
-  shift
-done
-
 # Are we generating crypto material with this command?
 if [ ! -d "organizations/peerOrganizations" ]; then
   CRYPTO_MODE="with crypto from '${CRYPTO}'"
@@ -508,7 +321,9 @@ if [ "$MODE" == "up" ]; then
 elif [ "$MODE" == "createChannel" ]; then
   echo "Creating channel '${CHANNEL_NAME}'."
   echo
-  echo "If network is not up, starting nodes with CLI timeout of '${MAX_RETRY}' tries and CLI delay of '${CLI_DELAY}' seconds and using database '${DATABASE} ${CRYPTO_MODE}"
+elif [ "$MODE" == "init" ]; then
+  echo "Starting nodes with CLI timeout of '${MAX_RETRY}' tries and CLI delay of '${CLI_DELAY}' seconds and using database '${DATABASE}' ${CRYPTO_MODE}"
+  echo "Creating channel '${CHANNEL_NAME}'."
   echo
 elif [ "$MODE" == "down" ]; then
   echo "Stopping network"
@@ -518,22 +333,22 @@ elif [ "$MODE" == "restart" ]; then
   echo
 elif [ "$MODE" == "deployEER" ]; then
   echo "deploying eer chaincode on channel '${CHANNEL_NAME}'"
-elif [ "$MODE" == "deployTest" ]; then
-  echo "test deployed chaincode tt on channel '${CHANNEL_NAME}'"
   echo
 else
   printHelp
   exit 1
 fi
 
+# react as modes are
 if [ "${MODE}" == "up" ]; then
   networkUp
 elif [ "${MODE}" == "createChannel" ]; then
   createChannel
+elif [ "${MODE}" == "init" ]; then
+  networkUp
+  createChannel
 elif [ "${MODE}" == "deployEER" ]; then
   deployEER
-elif [ "${MODE}" == "deployTest" ]; then
-  deployTest
 elif [ "${MODE}" == "down" ]; then
   networkDown
 elif [ "${MODE}" == "restart" ]; then

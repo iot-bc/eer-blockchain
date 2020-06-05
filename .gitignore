@@ -14,6 +14,7 @@ test.js
 chaincode/node_modules
 tests/node_modules
 tests/gateway/*
+tests/identity/*
 
 eer-network/system-genesis-block
 eer-network/channel-artifacts
@@ -21,5 +22,7 @@ eer-network/*.tar.gz
 eer-network/log.txt
 eer-network/organizations/ordererOrganizations
 eer-network/organizations/peerOrganizations
+eer-network/organizations/fabric-ca/*
+!eer-network/organizations/fabric-ca/*.yaml
 
 eer-network/.env
