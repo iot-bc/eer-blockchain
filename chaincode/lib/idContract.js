@@ -39,6 +39,30 @@ class IdentityContract extends Contract {
   }
 
   // fnssss todo
+
+  async addIdentityPair(ctx, realID, fakeID) {
+    let _id = Identity.createInstance(realID, fakeID);
+
+    await ctx.idList.addIdentity(_id);
+
+    return _id;
+  }
+
+  async getRealIdentity(ctx, fakeID) {
+    let idKey = Identity.makeKey(["ID", fakeID]);
+
+    return await ctx.idList.getIdentity(idKey);
+  }
+
+  async deleteIdentityPair(ctx, fakeID) {
+    let idKey = Identity.makeKey(["ID", fakeID]);
+
+    let realID = await ctx.idList.getIdentity(idKey);
+    await ctx.idList.deleteIdentity(idKey);
+
+    return realID;
+  }
+
 }
 
 module.exports = IdentityContract;

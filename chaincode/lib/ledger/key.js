@@ -10,11 +10,28 @@ const State = require("./state/state");
 class Key extends State {
 
   constructor(obj) {
+    // todo add keyParts
     super(Key.getClass(), []);
     Object.assign(this, obj);
   }
 
   /// ////
+
+  getKey(){
+    return this.key;
+  }
+
+  setKey(key){
+    this.key=key;
+  }
+
+  activiate(){
+    this.currentState=true;
+  }
+
+  drop(){
+    this.currentState=false;
+  }
 
 
   static fromBuffer(buffer) {

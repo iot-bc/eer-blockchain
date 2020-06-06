@@ -10,11 +10,27 @@ const State = require("./state/state");
 class Identity extends State {
 
   constructor(obj) {
-    super(Identity.getClass(), []);
+    super(Identity.getClass(), ["ID", obj.fakeID]);
     Object.assign(this, obj);
   }
 
   // ///
+
+  setRealID(id) {
+    this.realID = id;
+  }
+
+  getRealID() {
+    return this.realID
+  }
+
+  setFakeID(id) {
+    this.fakeID = id;
+  }
+
+  getFakeID() {
+    return this.fakeID
+  }
 
 
   static fromBuffer(buffer) {
@@ -29,9 +45,9 @@ class Identity extends State {
     return State.deserializeClass(data, Identity);
   }
 
-  static createInstance(...args) {
+  static createInstance(realID, fakeID) {
     // todo
-    return new Identity({...args});
+    return new Identity({realID, fakeID});
   }
 
   static getClass() {
@@ -39,4 +55,4 @@ class Identity extends State {
   }
 }
 
-module.exports=Identity;
+module.exports = Identity;

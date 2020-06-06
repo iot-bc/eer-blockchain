@@ -5,9 +5,9 @@
  * @Function: do nothing >_>
  */
 
-const {Contract, Context} = require("fabric-contract-api")
+const {Contract, Context} = require("fabric-contract-api");
 
-const Key = require("./ledger/key")
+const Key = require("./ledger/key");
 const KeyList = require("./ledger/keyList");
 
 
