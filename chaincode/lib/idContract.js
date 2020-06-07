@@ -51,7 +51,10 @@ class IdentityContract extends Contract {
   async getRealIdentity(ctx, fakeID) {
     let idKey = makeIDKey(fakeID);
 
-    return await ctx.idList.getIdentity(idKey);
+    let _id = await ctx.idList.getIdentity(idKey);
+
+    if(_id) return _id.getRealID();
+    else return null;
   }
 
   async deleteIdentityPair(ctx, fakeID) {

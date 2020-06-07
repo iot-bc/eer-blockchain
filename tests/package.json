@@ -2,9 +2,9 @@
   "name": "tests",
   "version": "1.0.0",
   "description": "",
-  "main": "addUrl.js",
+  "main": "testUrl.js",
   "scripts": {
-    "test": "rm -rf _idwallet && node addWallet.js && node addUrl.js"
+    "test": "rm -rf _idwallet && node addWallet.js && node testUrl.js"
   },
   "dependencies": {
     "fabric-network": "^2.1.0",

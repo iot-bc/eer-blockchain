@@ -35,9 +35,9 @@ class StateList {
     }
   }
 
-  async getStateList() {
-
-  }
+  // async queryStateList(querystring) {
+  //   return this.ctx.stub.getQueryResult(querystring);
+  // }
 
   async deleteState(key) {
     let ledgerKey = this.ctx.stub.createCompositeKey(this.name, State.splitKey(key));

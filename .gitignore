@@ -13,8 +13,8 @@ test.js
 
 chaincode/node_modules
 tests/node_modules
-tests/gateway/*
-tests/identity/*
+tests/gateway
+tests/identity
 
 eer-network/system-genesis-block
 eer-network/channel-artifacts

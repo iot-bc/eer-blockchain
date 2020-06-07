@@ -38,9 +38,6 @@ class UniformResourceLocatorContract extends Contract {
     console.info("=============  END : Initialize Ledger  ===========");
   }
 
-  async queryAll(ctx) {
-    return ctx.urlList;
-  }
 
   async getUrl(ctx, owner, device) {
     let urlKey = makeUrlKey(owner, device);

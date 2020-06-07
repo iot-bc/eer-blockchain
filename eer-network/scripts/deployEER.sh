@@ -170,7 +170,7 @@ chaincodeInvokeInit() {
   verifyResult $res "Invoke transaction failed on channel '$CHANNEL_NAME' due to uneven number of peer and org parameters "
 
   # Todo add other contracts
-  contracts=("url" "ac")
+  contracts=("url" "ac" "id" "key")
 
 
   for contract in "${contracts[@]}"

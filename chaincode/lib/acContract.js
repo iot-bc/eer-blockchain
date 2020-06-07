@@ -37,9 +37,13 @@ class AccessControlContract extends Contract {
     console.info("=============  END : Initialize Ledger  ===========");
   }
 
-  async queryAll(ctx) {
-    return ctx.acList;
-  }
+  // async queryAll(ctx) {
+  //   return ctx.acList;
+  // }
+  //
+  // async querySubject(ctx,subject){
+  //
+  // }
 
   async addPolicy(ctx, subject, object, operation, role, description) {
     let ac = AccessControl.createInstance(subject, object, operation, role, description);

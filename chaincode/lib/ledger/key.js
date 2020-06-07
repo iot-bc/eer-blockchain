@@ -10,7 +10,6 @@ const State = require("./state/state");
 class Key extends State {
 
   constructor(obj) {
-    // todo add keyParts
     super(Key.getClass(), ["KEY", obj.id]);
     Object.assign(this, obj);
   }

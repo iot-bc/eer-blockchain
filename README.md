@@ -29,7 +29,7 @@ bash cp.sh
 
 node addWallet.js
 
-node addUrl.js
+node testUrl.js
 
 node xxx.js
 
