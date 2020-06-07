@@ -1,14 +1,14 @@
 /**
  * @Author: xyf @Ubuntu18.04
- * @Created: 2020/6/3 下午9:47
- * @Filename: addUrl.js
+ * @Created: 2020/6/7 下午10:33
+ * @Filename: testAc.js
  * @Function: do nothing >_>
  */
 
 const fs = require("fs");
 const yaml = require("js-yaml");
 const {Wallets, Gateway} = require("fabric-network");
-const Url = require("./../chaincode/lib/ledger/url");
+const AccessControl = require("./../chaincode/lib/ledger/ac");
 
 
 // Main program function
@@ -49,28 +49,35 @@ async function main() {
     const network = await gateway.getNetwork("eerchannel");
 
     // Get addressability to commercial paper contract
-    console.log("Use org.eer.url smart contract.");
+    console.log("Use org.eer.ac smart contract.");
 
-    const contract = await network.getContract("eer", "org.eer.url");
+    const contract = await network.getContract("eer", "org.eer.ac");
 
     // buy commercial paper
-    console.log("Submit addUrl transaction.");
+    console.log("Submit testAc transaction.");
 
-    await contract.submitTransaction('addUrl', "o1","d1","u1");
+    // await contract.submitTransaction('addPolicy', "s1","obj1","op1","r1","d1");
+    // await contract.submitTransaction('addPolicy', "s2","obj2","op2","r2","d2");
 
-    // const addResponse = await contract.submitTransaction('addUrl', "o2","d2","u2");
+    const f1Response = await contract.evaluateTransaction("checkPolicy", "s2","obj2");
 
-    await contract.submitTransaction('updateUrl', "o1","d1","u3");
+    console.log(f1Response);
+    console.log(AccessControl.fromBuffer(f1Response));
 
-    const addResponse = await contract.submitTransaction("getUrl", "o1", "d1");
+    // await contract.submitTransaction("deleteKey", "i1");
 
-    // process response
+    // const f2Response = await contract.evaluateTransaction("checkPolicy", "s1","obj3");
+    // console.log(f2Response);
+    // console.log(AccessControl.fromBuffer(f2Response));
+    // await contract.submitTransaction("deletePolicy","s1","obj1")
+    //
+    // const f3Response = await contract.evaluateTransaction("checkPolicy", "s1","obj1");
+    // console.log(f3Response);
+    // console.log(AccessControl.fromBuffer(f3Response));
+    // if(Key.fromBuffer(f2Response))
+    //   console.log(Key.fromBuffer(f2Response));
+    // else console.log("Not null")
 
-    console.log("Process addUrl transaction response.");
-
-    let url = Url.fromBuffer(addResponse);
-
-    console.log(`${url.device} : ${url.url} successfully purchased by ${url.owner}`);
     console.log("Transaction complete.");
 
   } catch (error) {
