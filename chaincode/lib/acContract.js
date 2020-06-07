@@ -41,8 +41,8 @@ class AccessControlContract extends Contract {
     return ctx.acList;
   }
 
-  async addPolicy(ctx, subject, object, operation, role) {
-    let ac = AccessControl.createInstance(subject, object, operation, role);
+  async addPolicy(ctx, subject, object, operation, role, description) {
+    let ac = AccessControl.createInstance(subject, object, operation, role, description);
 
     ac.activiate();
 
@@ -56,24 +56,38 @@ class AccessControlContract extends Contract {
   // }
 
   async deletePolicy(ctx, subject, object) {
-    let acKey = AccessControl.makeKey([subject, object]);
+    let acKey = makeACKey(subject, object);
     let ac = await ctx.acList.getAccessControl(acKey);
 
-    ac.drop();
-
-    await ctx.acList.updateAccessControl(ac);
+    if (ac)
+      await ctx.acList.deleteAccessControl(acKey);
 
     return ac;
   }
 
   async checkPolicy(ctx, subject, object) {
-    let acKey = AccessControl.makeKey([subject, object]);
+    let acKey = makeACKey(subject, object);
     let ac = await ctx.acList.getAccessControl(acKey);
 
-    return !!ac;
+    if (ac && ac.getCurrentState()) {
+      return ac.getOperation();
+    } else return false;
+
+  }
+
+  async dropPolicy(ctx, subject, object) {
+    let acKey = makeACKey(subject, object);
+    let ac = await ctx.acList.getAccessControl(acKey);
+
+    ac.drop();
+    await ctx.acList.updateAccessControl(ac)
   }
 
   // async ...
+}
+
+function makeACKey(subject, object) {
+  return AccessControl.makeKey([subject, object])
 }
 
 module.exports = AccessControlContract;

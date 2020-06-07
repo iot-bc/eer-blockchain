@@ -43,7 +43,7 @@ class UniformResourceLocatorContract extends Contract {
   }
 
   async getUrl(ctx, owner, device) {
-    let urlKey = Url.makeKey([owner, device]);
+    let urlKey = makeUrlKey(owner, device);
     return await ctx.urlList.getUrl(urlKey);
   }
 
@@ -58,7 +58,7 @@ class UniformResourceLocatorContract extends Contract {
   }
 
   async updateUrl(ctx, owner, device, url) {
-    let urlKey = Url.makeKey([owner, device]);
+    let urlKey = makeUrlKey(owner, device);
     let _url = await ctx.urlList.getUrl(urlKey);
 
     if (_url) {
@@ -69,17 +69,20 @@ class UniformResourceLocatorContract extends Contract {
   }
 
   async deleteUrl(ctx, owner, device) {
-    let urlKey = Url.makeKey([owner, device]);
+    let urlKey = makeUrlKey(owner, device);
     let _url = await ctx.urlList.getUrl(urlKey);
 
     if (_url) {
-      _url.drop();
-      await ctx.urlList.updateUrl(_url);
+      await ctx.urlList.deleteUrl(urlKey);
     }
     return _url;
   }
 
   // async ...
+}
+
+function makeUrlKey(owner, device){
+  return Url.makeKey([owner, device])
 }
 
 module.exports = UniformResourceLocatorContract;

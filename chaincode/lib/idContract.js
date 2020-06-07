@@ -49,20 +49,23 @@ class IdentityContract extends Contract {
   }
 
   async getRealIdentity(ctx, fakeID) {
-    let idKey = Identity.makeKey(["ID", fakeID]);
+    let idKey = makeIDKey(fakeID);
 
     return await ctx.idList.getIdentity(idKey);
   }
 
   async deleteIdentityPair(ctx, fakeID) {
-    let idKey = Identity.makeKey(["ID", fakeID]);
+    let idKey = makeIDKey(fakeID);
 
     let realID = await ctx.idList.getIdentity(idKey);
     await ctx.idList.deleteIdentity(idKey);
 
     return realID;
   }
+}
 
+function makeIDKey(fakeID){
+  return Identity.makeKey(["ID",fakeID])
 }
 
 module.exports = IdentityContract;

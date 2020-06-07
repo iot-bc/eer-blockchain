@@ -56,6 +56,14 @@ class AccessControl extends State {
     this.role = role;
   }
 
+  getDescription() {
+    return this.description;
+  }
+
+  setDescription(description) {
+    this.description = description;
+  }
+
   // addRole(role) {
   //   if (!this.rule.split(" ").contains(role)) {
   //     this.role += ` ${role}`;
@@ -93,8 +101,8 @@ class AccessControl extends State {
     return State.deserializeClass(data, AccessControl);
   }
 
-  static createInstance(subject, object, operation, role) {
-    return new AccessControl({subject, object, operation, role});
+  static createInstance(subject, object, operation, role, description) {
+    return new AccessControl({subject, object, operation, role, description});
   }
 
   static getClass() {

@@ -39,7 +39,30 @@ class KeyContract extends Contract{
     console.info("=============  END : Initialize Ledger  ===========");
   }
 
-  // fnssss todo
+  async addKey(ctx,id,key){
+    let _key = Key.createInstance(id,key);
+
+    await ctx.keyList.addKey(_key);
+
+    return _key;
+  }
+
+  async getKey(ctx,id){
+    let keyKey = makeKeyKey(id);
+
+    return await ctx.keyList.getKey(keyKey);
+  }
+
+  async deleteKey(ctx, id){
+    let keyKey = makeKeyKey(id);
+
+    await ctx.keyList.deleteKey(keyKey);
+  }
+
+}
+
+function makeKeyKey(id){
+  return Key.makeKey(["KEY",id]);
 }
 
 module.exports= KeyContract;

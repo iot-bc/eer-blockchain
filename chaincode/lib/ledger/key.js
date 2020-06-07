@@ -11,28 +11,27 @@ class Key extends State {
 
   constructor(obj) {
     // todo add keyParts
-    super(Key.getClass(), []);
+    super(Key.getClass(), ["KEY", obj.id]);
     Object.assign(this, obj);
   }
 
   /// ////
 
-  getKey(){
+  getID() {
+    return this.id;
+  }
+
+  setID(id) {
+    this.id = id;
+  }
+
+  getKey() {
     return this.key;
   }
 
-  setKey(key){
-    this.key=key;
+  setKey(key) {
+    this.key = key;
   }
-
-  activiate(){
-    this.currentState=true;
-  }
-
-  drop(){
-    this.currentState=false;
-  }
-
 
   static fromBuffer(buffer) {
     return Key.deserialize(buffer);
@@ -47,8 +46,8 @@ class Key extends State {
   }
 
   // todo
-  static createInstance() {
-    return new Key({});
+  static createInstance(id, key) {
+    return new Key({id, key});
   }
 
   static getClass() {

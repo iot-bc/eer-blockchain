@@ -37,14 +37,6 @@ class UniformResourceLocator extends State {
     this.url = url;
   }
 
-  activiate() {
-    this.currentState = true;
-  }
-
-  drop() {
-    this.currentState = false;
-  }
-
   static fromBuffer(buffer) {
     return UniformResourceLocator.deserialize(buffer);
   }
