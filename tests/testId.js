@@ -56,19 +56,32 @@ async function main() {
     // buy commercial paper
     console.log("Submit testId transaction.");
 
-    // await contract.submitTransaction('addIdentityPair', "r1","f1");
-    // await contract.submitTransaction('addIdentityPair', "r2","f2");
+    let response = null;
 
-    // const f1Response = await contract.evaluateTransaction("getRealIdentity", "f1");
-    //
-    // console.log(Identity.fromBuffer(f1Response));
-    //
-    // await contract.submitTransaction("deleteIdentityPair", "f1");
+    response = await contract.evaluateTransaction("getRealIdentity", "f1");
+    console.log(response.toString()?response.toString():0)
+    console.log("==================================================")
 
-    const f2Response = await contract.evaluateTransaction("getRealIdentity", "f2");
-    if(Buffer.from(JSON.stringify(f2Response)))
-      console.log(Identity.fromBuffer(f2Response));
-    else console.log("Not null")
+    response = await contract.submitTransaction('addIdentityPair', "r1","f1");
+    console.log(JSON.parse(response.toString()))
+    console.log("==================================================")
+    response = await contract.submitTransaction('addIdentityPair', "r2","f2");
+    console.log(JSON.parse(response.toString()))
+    console.log("==================================================")
+
+    // await contract.submitTransaction('addIdentityPair', "r3","f3");
+
+    response = await contract.evaluateTransaction("getRealIdentity", "f1");
+    console.log(response.toString()?response.toString():0)
+    console.log("==================================================")
+
+    response = await contract.submitTransaction("deleteIdentityPair", "f1");
+    console.log(response.toString()?response.toString():0)
+    console.log("==================================================")
+
+    response = await contract.evaluateTransaction("getRealIdentity", "f1");
+    console.log(response.toString()?response.toString():0)
+    console.log("==================================================")
 
     console.log("Transaction complete.");
 

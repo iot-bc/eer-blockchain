@@ -56,27 +56,51 @@ async function main() {
     // buy commercial paper
     console.log("Submit testAc transaction.");
 
-    // await contract.submitTransaction('addPolicy', "s1","obj1","op1","r1","d1");
-    // await contract.submitTransaction('addPolicy', "s2","obj2","op2","r2","d2");
+    let response = null;
 
-    const f1Response = await contract.evaluateTransaction("checkPolicy", "s2","obj2");
+    response = await contract.evaluateTransaction("checkPolicy", "s1", "obj1");
+    console.log(response.toString() ? response.toString() : 0);
+    console.log("==================================================");
 
-    console.log(f1Response);
-    console.log(AccessControl.fromBuffer(f1Response));
+    response = await contract.submitTransaction("addPolicy", "s1", "obj1", "W", "r1", "d1");
+    console.log(JSON.parse(response.toString()));
+    console.log("==================================================");
+    response = await contract.submitTransaction("addPolicy", "s2", "obj2", "R", "r2", "d2");
+    console.log(JSON.parse(response.toString()));
+    console.log("==================================================");
 
-    // await contract.submitTransaction("deleteKey", "i1");
+    response = await contract.evaluateTransaction("checkPolicy", "s1", "obj1");
+    console.log(response.toString() ? response.toString() : 0);
+    console.log("==================================================");
 
-    // const f2Response = await contract.evaluateTransaction("checkPolicy", "s1","obj3");
-    // console.log(f2Response);
-    // console.log(AccessControl.fromBuffer(f2Response));
-    // await contract.submitTransaction("deletePolicy","s1","obj1")
-    //
-    // const f3Response = await contract.evaluateTransaction("checkPolicy", "s1","obj1");
-    // console.log(f3Response);
-    // console.log(AccessControl.fromBuffer(f3Response));
-    // if(Key.fromBuffer(f2Response))
-    //   console.log(Key.fromBuffer(f2Response));
-    // else console.log("Not null")
+    response = await contract.evaluateTransaction("checkPolicy", "s2", "obj2");
+    console.log(response.toString() ? response.toString() : 0);
+    console.log("==================================================");
+
+    response = await contract.submitTransaction("dropPolicy", "s1", "obj1");
+    console.log(response.toString() ? response.toString() : 0);
+    console.log("==================================================");
+
+    response = await contract.evaluateTransaction("checkPolicy", "s1", "obj1");
+    console.log(response.toString() ? response.toString() : 0);
+    console.log("==================================================");
+
+    response = await contract.submitTransaction("activiatePolicy", "s1", "obj1");
+    console.log(response.toString() ? response.toString() : 0);
+    console.log("==================================================");
+
+    response = await contract.evaluateTransaction("checkPolicy", "s1", "obj1");
+    console.log(response.toString() ? response.toString() : 0);
+    console.log("==================================================");
+
+    response = await contract.submitTransaction("deletePolicy", "s1", "obj1");
+    console.log(response.toString() ? response.toString() : 0);
+    console.log("==================================================");
+
+    response = await contract.evaluateTransaction("checkPolicy", "s1", "obj1");
+    console.log(response.toString() ? response.toString() : 0);
+    console.log("==================================================");
+
 
     console.log("Transaction complete.");
 

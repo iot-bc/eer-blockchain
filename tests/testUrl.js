@@ -56,38 +56,40 @@ async function main() {
     // buy commercial paper
     console.log("Submit addUrl transaction.");
 
-    // await contract.submitTransaction('addUrl', "o1","d1","u1");
-    // await contract.submitTransaction('addUrl', "o2","d2","u2");
-    //
-    // await contract.submitTransaction('updateUrl', "o1","d1","u8");
+    let response = null;
 
-    const f1Response = await contract.evaluateTransaction("getUrl", "o1", "d1");
+    response = await contract.evaluateTransaction("getUrl", "o1", "d1");
+    console.log(response.toString()?response.toString():0)
+    console.log("==================================================")
 
-    console.log(Url.fromBuffer(f1Response));
+    response = await contract.submitTransaction('addUrl', "o1","d1","u1");
+    let url = JSON.parse(response.toString())
+    console.log(url)
+    console.log(url.owner);
+    console.log("==================================================")
 
-    // await contract.submitTransaction('deleteUrl',"o1","o1")
-    //
-    // const f2Response = await contract.submitTransaction("getUrl", "o1", "d1");
-    //
-    // console.log(f2Response===null?"Yes":"no");
-    //
-    // await contract.submitTransaction("updateUrl", "o1", "d1","u111");
-    // const f3Response = await contract.submitTransaction("getUrl", "o1", "d1");
-    //
-    // console.log(Url.fromBuffer(f3Response));
+    response = await contract.submitTransaction('addUrl', "o2","d2","u2");
+    url = JSON.parse(response.toString())
+    console.log(url)
+    console.log(url.owner);
+    console.log("==================================================")
 
-    // const addResponse = await contract.evaluateTransaction("getAllUrls",JSON.stringify({"selector":{"owner":"o1"}}));
+    response = await contract.submitTransaction('updateUrl', "o1","d1","u8");
+    console.log(response.toString()?response.toString():0)
+    console.log("==================================================")
 
+    response = await contract.evaluateTransaction("getUrl", "o1", "d1");
+    console.log(response.toString()?response.toString():0)
+    console.log("==================================================")
 
-    // console.log((Url.fromBuffer(addResponse)).length);
+    response = await contract.submitTransaction('deleteUrl',"o1","d1")
+    console.log(response.toString()?response.toString():0)
+    console.log("==================================================")
 
-    // process response
+    response = await contract.evaluateTransaction("getUrl", "o1", "d1");
+    console.log(response.toString()?response.toString():0)
+    console.log("==================================================")
 
-    // console.log("Process addUrl transaction response.");
-
-    // let url = Url.fromBuffer(addResponse);
-    //
-    // console.log(`${url.device} : ${url.url} successfully purchased by ${url.owner}`);
     console.log("Transaction complete.");
 
   } catch (error) {
