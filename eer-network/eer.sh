@@ -228,8 +228,8 @@ function deployEER() {
   exit 0
 }
 
-function cp() {
-  scripts/cp.sh
+function copyMaterials() {
+  sudo bash ./scripts/cp.sh
 }
 
 
@@ -338,7 +338,7 @@ elif [ "$MODE" == "restart" ]; then
 elif [ "$MODE" == "deployEER" ]; then
   echo "deploying eer chaincode on channel '${CHANNEL_NAME}'"
   echo
-elif [ "$MODE" == "cp" ]; then
+elif [ "$MODE" == "copy" ]; then
   echo "copy config and gateway materials"
   echo
 else
@@ -356,8 +356,8 @@ elif [ "${MODE}" == "init" ]; then
   createChannel
 elif [ "${MODE}" == "deployEER" ]; then
   deployEER
-elif [ "${MODE}" == "cp" ]; then
-  cp
+elif [ "${MODE}" == "copy" ]; then
+  copyMaterials
 elif [ "${MODE}" == "down" ]; then
   networkDown
 elif [ "${MODE}" == "restart" ]; then
