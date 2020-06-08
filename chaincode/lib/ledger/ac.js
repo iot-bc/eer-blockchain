@@ -81,7 +81,7 @@ class AccessControl extends State {
   //   return this.rule.split(" ").indexOf(role) > -1;
   // }
 
-  activiate() {
+  activate() {
     this.currentState = true;
   }
 

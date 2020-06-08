@@ -52,7 +52,7 @@ class AccessControlContract extends Contract {
     }
     let ac = AccessControl.createInstance(subject, object, operation, role, description);
 
-    ac.activiate();
+    ac.activate();
 
     await ctx.acList.addAccessControl(ac);
 
@@ -92,11 +92,11 @@ class AccessControlContract extends Contract {
     } else return false;
   }
 
-  async activiatePolicy(ctx, subject, object) {
+  async activatePolicy(ctx, subject, object) {
     let acKey = makeACKey(subject, object);
     let ac = await ctx.acList.getAccessControl(acKey);
     if (ac) {
-      ac.activiate();
+      ac.activate();
       await ctx.acList.updateAccessControl(ac);
       return ac.getDescription();
     } else return false;

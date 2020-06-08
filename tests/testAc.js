@@ -85,7 +85,7 @@ async function main() {
     console.log(response.toString() ? response.toString() : 0);
     console.log("==================================================");
 
-    response = await contract.submitTransaction("activiatePolicy", "s1", "obj1");
+    response = await contract.submitTransaction("activatePolicy", "s1", "obj1");
     console.log(response.toString() ? response.toString() : 0);
     console.log("==================================================");
 
