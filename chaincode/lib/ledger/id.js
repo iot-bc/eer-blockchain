@@ -46,7 +46,6 @@ class Identity extends State {
   }
 
   static createInstance(realID, fakeID) {
-    // todo
     return new Identity({realID, fakeID});
   }
 

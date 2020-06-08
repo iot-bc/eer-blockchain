@@ -38,9 +38,10 @@ class IdentityContract extends Contract {
     console.info("=============  END : Initialize Ledger  ===========");
   }
 
-  // fnssss todo
-
   async addIdentityPair(ctx, realID, fakeID) {
+    if (await ctx.idList.getIdentity(makeIDKey(fakeID))) {
+      return false;
+    }
     let _id = Identity.createInstance(realID, fakeID);
 
     await ctx.idList.addIdentity(_id);
@@ -53,22 +54,23 @@ class IdentityContract extends Contract {
 
     let _id = await ctx.idList.getIdentity(idKey);
 
-    if(_id) return _id.getRealID();
+    if (_id) return _id.getRealID();
     else return null;
   }
 
   async deleteIdentityPair(ctx, fakeID) {
     let idKey = makeIDKey(fakeID);
 
-    let realID = await ctx.idList.getIdentity(idKey);
-    await ctx.idList.deleteIdentity(idKey);
-
-    return realID;
+    let _id = await ctx.idList.getIdentity(idKey);
+    if (_id) {
+      await ctx.idList.deleteIdentity(idKey);
+      return _id.getRealID();
+    } else return false;
   }
 }
 
-function makeIDKey(fakeID){
-  return Identity.makeKey(["ID",fakeID])
+function makeIDKey(fakeID) {
+  return Identity.makeKey(["ID", fakeID]);
 }
 
 module.exports = IdentityContract;
