@@ -228,6 +228,10 @@ function deployEER() {
   exit 0
 }
 
+function cp() {
+  scripts/cp.sh
+}
+
 
 
 # Tear down running network
@@ -334,6 +338,9 @@ elif [ "$MODE" == "restart" ]; then
 elif [ "$MODE" == "deployEER" ]; then
   echo "deploying eer chaincode on channel '${CHANNEL_NAME}'"
   echo
+elif [ "$MODE" == "cp" ]; then
+  echo "copy config and gateway materials"
+  echo
 else
   printHelp
   exit 1
@@ -349,6 +356,8 @@ elif [ "${MODE}" == "init" ]; then
   createChannel
 elif [ "${MODE}" == "deployEER" ]; then
   deployEER
+elif [ "${MODE}" == "cp" ]; then
+  cp
 elif [ "${MODE}" == "down" ]; then
   networkDown
 elif [ "${MODE}" == "restart" ]; then

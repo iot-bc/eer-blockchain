@@ -12,9 +12,9 @@ dist
 test.js
 
 chaincode/node_modules
-tests/node_modules
-tests/gateway
-tests/identity
+node-tests/node_modules
+config/gateway/
+config/identity/
 
 eer-network/system-genesis-block
 eer-network/channel-artifacts
