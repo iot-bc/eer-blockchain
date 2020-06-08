@@ -39,13 +39,13 @@ class KeyContract extends Contract {
     console.info("=============  END : Initialize Ledger  ===========");
   }
 
-  async addKey(ctx, id, key) {
+  async addKey(ctx, id, secret) {
 
     if (await ctx.keyList.getKey(makeKeyKey(id))) {
       return false;
     }
 
-    let _key = Key.createInstance(id, key);
+    let _key = Key.createInstance(id, secret);
 
     await ctx.keyList.addKey(_key);
 
@@ -57,18 +57,18 @@ class KeyContract extends Contract {
 
     let _key = await ctx.keyList.getKey(keyKey);
 
-    if (_key) return _key.getKey();
-    else return null;
+    if (_key) return _key.getSecret();
+    else return false;
   }
 
   async deleteKey(ctx, id) {
     let keyKey = makeKeyKey(id);
 
-    let _key = ctx.keyList.getKey(keyKey);
+    let _key = await ctx.keyList.getKey(keyKey);
 
     if (_key) {
       await ctx.keyList.deleteKey(keyKey);
-      return _key.getKey();
+      return _key.getSecret();
     } else return false;
   }
 

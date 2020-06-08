@@ -56,20 +56,30 @@ async function main() {
     // buy commercial paper
     console.log("Submit testKey transaction.");
 
-    await contract.submitTransaction('addKey', "i1","k1");
-    await contract.submitTransaction('addKey', "i2","k2");
+    let response = null;
 
-    const f1Response = await contract.evaluateTransaction("getKey", "i1");
+    response = await contract.evaluateTransaction("getKey", "i1");
+    console.log(response.toString());
+    console.log("==================================================");
 
-    console.log(f1Response);
+    response = await contract.submitTransaction('addKey', "i1","k1");
+    console.log(JSON.parse(response.toString()));
+    console.log("==================================================");
+    response = await contract.submitTransaction('addKey', "i2","k2");
+    console.log(JSON.parse(response.toString()));
+    console.log("==================================================");
 
-    // await contract.submitTransaction("deleteKey", "i1");
+    response = await contract.evaluateTransaction("getKey", "i1");
+    console.log(response.toString() ? response.toString() : 0);
+    console.log("==================================================");
 
-    const f2Response = await contract.evaluateTransaction("getKey", "i2");
-    console.log(f2Response);
-    // if(Key.fromBuffer(f2Response))
-    //   console.log(Key.fromBuffer(f2Response));
-    // else console.log("Not null")
+    response = await contract.submitTransaction("deleteKey", "i1");
+    console.log(response.toString() ? response.toString() : 0);
+    console.log("==================================================");
+
+    response = await contract.evaluateTransaction("getKey", "i1");
+    console.log(response.toString() ? response.toString() : 0);
+    console.log("==================================================");
 
     console.log("Transaction complete.");
 

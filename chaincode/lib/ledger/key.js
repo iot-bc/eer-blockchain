@@ -14,8 +14,6 @@ class Key extends State {
     Object.assign(this, obj);
   }
 
-  /// ////
-
   getID() {
     return this.id;
   }
@@ -24,12 +22,12 @@ class Key extends State {
     this.id = id;
   }
 
-  getKey() {
-    return this.key;
+  getSecret() {
+    return this.secret;
   }
 
-  setKey(key) {
-    this.key = key;
+  setSecret(secret) {
+    this.secret = secret;
   }
 
   static fromBuffer(buffer) {
@@ -44,9 +42,8 @@ class Key extends State {
     return State.deserializeClass(data, Key);
   }
 
-  // todo
-  static createInstance(id, key) {
-    return new Key({id, key});
+  static createInstance(id, secret) {
+    return new Key({id, secret});
   }
 
   static getClass() {
