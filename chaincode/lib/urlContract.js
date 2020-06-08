@@ -44,7 +44,7 @@ class UniformResourceLocatorContract extends Contract {
     let _url = await ctx.urlList.getUrl(urlKey);
 
     if (_url) return _url.getUrl();
-    else return null;
+    else return false;
   }
 
   async addUrl(ctx, owner, device, url) {
