@@ -229,7 +229,7 @@ function deployEER() {
 }
 
 function copyMaterials() {
-  sudo bash ./scripts/cp.sh
+  bash ./scripts/cp.sh
 }
 
 

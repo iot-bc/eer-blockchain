@@ -13,7 +13,7 @@ const {Wallets, Gateway} = require("fabric-network");
 async function main() {
 
   // A wallet stores a collection of identities for use
-  const wallet = await Wallets.newFileSystemWallet("./../config/identity/user/balaji/wallet");
+  const wallet = await Wallets.newFileSystemWallet("./identity/user/balaji/wallet");
 
 
   // A gateway defines the peers used to access Fabric networks
@@ -26,7 +26,7 @@ async function main() {
     const userName = "balaji";
 
     // Load connection profile; will be used to locate a gateway
-    let connectionProfile = yaml.safeLoad(fs.readFileSync("./../config/gateway/connection-org1.yaml", "utf8"));
+    let connectionProfile = yaml.safeLoad(fs.readFileSync("./gateway/connection-org1.yaml", "utf8"));
 
     // Set connection options; identity and wallet
     let connectionOptions = {
@@ -60,44 +60,44 @@ async function main() {
     console.log(response.toString() ? response.toString() : 0);
     console.log("==================================================");
 
-    response = await contract.submitTransaction("addPolicy", "s1", "obj1", "W", "r1", "d1");
-    console.log(JSON.parse(response.toString()));
-    console.log("==================================================");
-    response = await contract.submitTransaction("addPolicy", "s2", "obj2", "R", "r2", "d2");
-    console.log(JSON.parse(response.toString()));
-    console.log("==================================================");
-
-    response = await contract.evaluateTransaction("checkPolicy", "s1", "obj1");
-    console.log(response.toString() ? response.toString() : 0);
-    console.log("==================================================");
-
-    response = await contract.evaluateTransaction("checkPolicy", "s2", "obj2");
-    console.log(response.toString() ? response.toString() : 0);
-    console.log("==================================================");
-
-    response = await contract.submitTransaction("dropPolicy", "s1", "obj1");
-    console.log(response.toString() ? response.toString() : 0);
-    console.log("==================================================");
-
-    response = await contract.evaluateTransaction("checkPolicy", "s1", "obj1");
-    console.log(response.toString() ? response.toString() : 0);
-    console.log("==================================================");
-
-    response = await contract.submitTransaction("activatePolicy", "s1", "obj1");
-    console.log(response.toString() ? response.toString() : 0);
-    console.log("==================================================");
-
-    response = await contract.evaluateTransaction("checkPolicy", "s1", "obj1");
-    console.log(response.toString() ? response.toString() : 0);
-    console.log("==================================================");
-
-    response = await contract.submitTransaction("deletePolicy", "s1", "obj1");
-    console.log(response.toString() ? response.toString() : 0);
-    console.log("==================================================");
-
-    response = await contract.evaluateTransaction("checkPolicy", "s1", "obj1");
-    console.log(response.toString() ? response.toString() : 0);
-    console.log("==================================================");
+    // response = await contract.submitTransaction("addPolicy", "s1", "obj1", "W", "r1", "d1");
+    // console.log(JSON.parse(response.toString()));
+    // console.log("==================================================");
+    // response = await contract.submitTransaction("addPolicy", "s2", "obj2", "R", "r2", "d2");
+    // console.log(JSON.parse(response.toString()));
+    // console.log("==================================================");
+    //
+    // response = await contract.evaluateTransaction("checkPolicy", "s1", "obj1");
+    // console.log(response.toString() ? response.toString() : 0);
+    // console.log("==================================================");
+    //
+    // response = await contract.evaluateTransaction("checkPolicy", "s2", "obj2");
+    // console.log(response.toString() ? response.toString() : 0);
+    // console.log("==================================================");
+    //
+    // response = await contract.submitTransaction("dropPolicy", "s1", "obj1");
+    // console.log(response.toString() ? response.toString() : 0);
+    // console.log("==================================================");
+    //
+    // response = await contract.evaluateTransaction("checkPolicy", "s1", "obj1");
+    // console.log(response.toString() ? response.toString() : 0);
+    // console.log("==================================================");
+    //
+    // response = await contract.submitTransaction("activatePolicy", "s1", "obj1");
+    // console.log(response.toString() ? response.toString() : 0);
+    // console.log("==================================================");
+    //
+    // response = await contract.evaluateTransaction("checkPolicy", "s1", "obj1");
+    // console.log(response.toString() ? response.toString() : 0);
+    // console.log("==================================================");
+    //
+    // response = await contract.submitTransaction("deletePolicy", "s1", "obj1");
+    // console.log(response.toString() ? response.toString() : 0);
+    // console.log("==================================================");
+    //
+    // response = await contract.evaluateTransaction("checkPolicy", "s1", "obj1");
+    // console.log(response.toString() ? response.toString() : 0);
+    // console.log("==================================================");
 
 
     console.log("Transaction complete.");
